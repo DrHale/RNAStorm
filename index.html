@@ -44,7 +44,7 @@
 
     <!-- Begin page content -->
 	<div class="panel panel-default">
-	<div class="panel-heading">Graphs <button id="butDisplay" onClick="clickClear();">Clear</button></div>
+	<div class="panel-heading">Graphs <button id="butDisplay" onClick="clickClear();">Clear</button><input type="file" id="file1"><button id="butLoad" onClick="clickLoad();">Load</button></div>
 	<div class="panel-body" id="genecharts" style="height: 300px;overflow:auto;"></div>
 	</div>
 	
@@ -56,7 +56,6 @@
 		<input type="text" id="txtMax" onkeyup="changetxtFilter()" value="" size="8" placeholder="max FPKM">
 		<input type="text" id="txtFold" onkeyup="changetxtFilter()" value="" size="8" placeholder="Foldchange">
 		<input type="text" id="txtCluster" onkeyup="changetxtFilter()" value="" size="8" placeholder="Cluster">
-        <input type="file" id="file1">
 		<span>Results: </span>
 		<span id="nfilterResults">0</span>
 	</div>

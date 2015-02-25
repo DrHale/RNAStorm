@@ -113,6 +113,15 @@ fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 
 loadDataSet(jsontest[0]);
 
+function clickLoad() {
+    var file = document.getElementById("file1").value;
+    console.log("clicked load");
+    file = file.substring(0,file.lastIndexOf("\\")+1);
+    loadDataSetFolder(file);
+}
+
 function loadDataSetFolder(path) {
-    console.log(path);
+    console.log("loading"+path);
+    var files = fs.readdirSync(path);
+    console.log(files);
 }
