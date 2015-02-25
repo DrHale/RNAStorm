@@ -15,7 +15,7 @@ genefpkm.prototype.addfold = function(sample1,sample2,log2fold,pvalue,qvalue) {
     var nfold = new fold(sample1,sample2,log2fold,pvalue,qvalue);
     this.folds.push(nfold);
 };
-genefpkm.prototype.setcluster = function(foldlimit) {
+/*genefpkm.prototype.setcluster = function(foldlimit) {
     var clusterstr = "XXX";
     var clusterarr = clusterstr.split("");
     for(i=0;i<this.folds.length;i++) {
@@ -44,7 +44,7 @@ genefpkm.prototype.setcluster = function(foldlimit) {
     }
     this.cluster=clusterarr.join("");
 };
-
+*/
 
 function loadconfig() {
 	var configjson = fs.readFileSync(bigdataPath, 'utf-8');
@@ -86,7 +86,7 @@ fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 	data = d3.tsv.parseRows(contents);
 	
 	genecols = data.shift();
-	
+    //console.log("data length"+data.length);
 	var j=0;
 	var i=0;
 	while(i<data.length && j<newdata.length) {
@@ -103,9 +103,9 @@ fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 		}
 		}
 	}
-	changeCluster(2.0);
+	//changeCluster(2.0);
 	data=[];
-	//console.log("DONE!!");
+	console.log("DONE!!");
 	d3.select("#appStatus").text("Ready ...");
 });
 
@@ -113,3 +113,6 @@ fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 
 loadDataSet(jsontest[0]);
 
+function loadDataSetFolder(path) {
+    console.log(path);
+}
