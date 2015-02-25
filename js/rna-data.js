@@ -121,7 +121,7 @@ function clickLoad() {
 }
 
 function loadDataSetFolder(path) {
-    console.log("loading"+path);
+    console.log("loading data "+path);
     var files = fs.readdirSync(path);
     console.log(files);
 }
