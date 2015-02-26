@@ -122,6 +122,11 @@ function clickLoad() {
 
 function loadDataSetFolder(path) {
     console.log("loading data "+path);
+    readgroupinfo(path+"read_groups.info");
+    //cuffdifffiles(path);
+}
+
+function cuffdifffiles(path) {
     var files = fs.readdirSync(path);
 
     for(i=0;i<files.length;i++) {
@@ -132,11 +137,39 @@ function loadDataSetFolder(path) {
             var filepath = path+files[i];
             var filefd =  fs.openSync(filepath,'r');
             //var myline=fs.read(filefd, 100);
-            var filebuf =new Buffer(100)
-            fs.readSync(filefd, filebuf, 0, 100, 0)
-            console.log(filebuf.toString());
-        }
 
+            var colnames="";
+            var filebuflen = 100;
+            do {
+                var filebuf = new Buffer(filebuflen);
+                fs.readSync(filefd, filebuf, 0, filebuflen, 0);
+                colnames = filebuf.toString();
+                filebuflen+=100;
+            }
+            while (colnames.indexOf("\n") < 0);
+            colnames = colnames.substring(0,colnames.indexOf("\n"));
+
+            console.log("*** "+filebuflen);
+            console.log(colnames.split("\t"));
+        }
     }
-    console.log(files);
+}
+
+function readgroupinfo(path) {
+    var contents = fs.readFileSync(path, 'utf-8');
+    var readinfo = [];
+    readinfo = d3.tsv.parseRows(contents);
+    readinfo.shift();
+    var samples = [].map.call(readinfo,function(x) { return x[1]; });
+    console.log(readinfo);
+    console.log(samples);
+
+    var conditions = [];
+    conditions.push(samples[0]);
+    for (i=1;i<samples.length;i++) {
+        if (samples[i]!=conditions[conditions.length-1]) {
+            conditions.push(samples[i]);
+        }
+    }
+    console.log(conditions);
 }
