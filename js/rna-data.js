@@ -123,5 +123,20 @@ function clickLoad() {
 function loadDataSetFolder(path) {
     console.log("loading data "+path);
     var files = fs.readdirSync(path);
+
+    for(i=0;i<files.length;i++) {
+        var fileext=files[i].substring(files[i].lastIndexOf("."),files[i].length);
+        if (fileext==".fpkm_tracking" || fileext==".count_tracking" || fileext==".info" || fileext==".read_group_tracking" || fileext==".diff") {
+            //console.log("fpkm track");
+            console.log(files[i]+" "+files[i].length+" "+fileext);
+            var filepath = path+files[i];
+            var filefd =  fs.openSync(filepath,'r');
+            //var myline=fs.read(filefd, 100);
+            var filebuf =new Buffer(100)
+            fs.readSync(filefd, filebuf, 0, 100, 0)
+            console.log(filebuf.toString());
+        }
+
+    }
     console.log(files);
 }
