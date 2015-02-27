@@ -69,17 +69,17 @@ fs.readFile(dataset.files.fpkm, 'utf-8', function (error, contents) {
 	var data = [];
     
 	data = d3.tsv.parseRows(contents);
-
-	colnames = data.shift();
-	colnames = ["gene","name","locus","CD34","BFU","CFU","Pro","Cluster"];
+    data.shift();
+	//colnames = data.shift();
+	//colnames = ["gene","name","locus","CD34","BFU","CFU","Pro","Cluster"];
 	
-	newdata = data.map(function(x,i) { return new genefpkm(x[0],x[6],[ +x[9],+x[13],+x[17],+x[21]],genenames[i][2])});
-		
-	data="";
+	//newdata = data.map(function(x,i) { return new genefpkm(x[0],x[6],[ +x[9],+x[13],+x[17],+x[21]],genenames[i][2])});
+    newdata = data.map(function(x,i) { return new genefpkm(x[0],x[6],getGeneFpkm(x,4),genenames[i][2])});
+
+	data = [];
 	geneindex = [].map.call(newdata,function(x) { return x.gene; })
 });
 //}
-
 
 fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 	var data = [];
@@ -111,6 +111,15 @@ fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 
 }
 
+function getGeneFpkm(row,numSamples) {
+    var fpkm=[];
+    for (i=0;i<numSamples;i++) {
+        pos = 9+4*i;
+        fpkm.push(+row[pos]);
+    }
+    return fpkm;
+}
+
 loadDataSet(jsontest[0]);
 
 function clickLoad() {
@@ -122,7 +131,9 @@ function clickLoad() {
 
 function loadDataSetFolder(path) {
     console.log("loading data "+path);
-    readgroupinfo(path+"read_groups.info");
+    var samples = readgroupinfo(path+"read_groups.info");
+    console.log(samples);
+
     //cuffdifffiles(path);
 }
 
@@ -161,15 +172,29 @@ function readgroupinfo(path) {
     readinfo = d3.tsv.parseRows(contents);
     readinfo.shift();
     var samples = [].map.call(readinfo,function(x) { return x[1]; });
-    console.log(readinfo);
-    console.log(samples);
+    var repnumber = [].map.call(readinfo,function(x) { return x[2]; });
+    var samplefiles = [].map.call(readinfo,function(x) { return x[0]; });
 
     var conditions = [];
-    conditions.push(samples[0]);
+    conditions.push(new sample(samples[0]));
+    conditions[0].replicates.push(new replicate(repnumber[0],samplefiles[0]));
     for (i=1;i<samples.length;i++) {
-        if (samples[i]!=conditions[conditions.length-1]) {
-            conditions.push(samples[i]);
+        if (samples[i]!=conditions[conditions.length-1].name) {
+            conditions.push(new sample(samples[i]));
+            conditions[conditions.length-1].replicates.push(new replicate(repnumber[i],samplefiles[i]));
+        } else {
+            conditions[conditions.length-1].replicates.push(new replicate(repnumber[i],samplefiles[i]));
         }
     }
-    console.log(conditions);
+    return conditions;
+}
+
+function sample(samplename) {
+    this.name=samplename;
+    this.replicates=[];
+}
+
+function replicate(replicateNum,file) {
+    this.number=replicateNum;
+    this.file=file;
 }
