@@ -72,9 +72,9 @@ fs.readFile(dataset.files.fpkm, 'utf-8', function (error, contents) {
     data.shift();
 	//colnames = data.shift();
 	//colnames = ["gene","name","locus","CD34","BFU","CFU","Pro","Cluster"];
-	
+
 	//newdata = data.map(function(x,i) { return new genefpkm(x[0],x[6],[ +x[9],+x[13],+x[17],+x[21]],genenames[i][2])});
-    newdata = data.map(function(x,i) { return new genefpkm(x[0],x[6],getGeneFpkm(x,4),genenames[i][2])});
+    newdata = data.map(function(x,i) { return new genefpkm(x[0],x[6],getGeneFpkm(x,dataset.Samples.length),genenames[i][2])});
 
 	data = [];
 	geneindex = [].map.call(newdata,function(x) { return x.gene; })
