@@ -26,7 +26,7 @@ function fooUP(selection,i) {
     //console.log("UPDATE "+i);
     d3.select(this).html("");
     //console.log(d3.select(this).datum());
-    lineGraph(d3.select(this).datum(),d3.select(this),i);
+    lineGraph(d3.select(this).datum(),d3.select(this),i,jsontest[0]);
     //displayChart2(d3.select(this).datum(),d3.select(this),i);
 }
 
@@ -36,7 +36,7 @@ function fooNEW(selection,i) {
         console.log("ERROR !!!");
         return;
     }
-    lineGraph(selection.datum(),selection,i);
+    lineGraph(selection.datum(),selection,i,jsontest[0]);
     //displayChart2(selection.datum(),selection,i);
 }
 
@@ -61,8 +61,9 @@ function redrawCharts() {
 
 }
 
-function lineGraph(gene,selection,chartIndex) {
-    var chartStages = ["CD34","BFU","CFU","Pro"];
+function lineGraph(gene,selection,chartIndex,dataset) {
+    var chartStages = dataset.Samples;
+   // var chartStages = ["CD34","BFU","CFU","Pro"];
     var chartGene = gene;
 
     var chartwidth = 350,chartheight = 280;
