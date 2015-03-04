@@ -22,43 +22,13 @@ function clickClear() {
     geneplots.splice(0,geneplots.length);
 }
 
-function fooUP(selection,i) {
-    //console.log("UPDATE "+i);
-    d3.select(this).html("");
-    //console.log(d3.select(this).datum());
-    lineGraph(d3.select(this).datum(),d3.select(this),i,jsontest[0]);
-    //displayChart2(d3.select(this).datum(),d3.select(this),i);
-}
-
-function fooNEW(selection,i) {
-//console.log("NEW "+i);
-    if (!selection) {
-        console.log("ERROR !!!");
-        return;
-    }
-    lineGraph(selection.datum(),selection,i,jsontest[0]);
-    //displayChart2(selection.datum(),selection,i);
-}
-
 function redrawCharts() {
-
     var chartDiv = d3.select("body").select("#genecharts");
-
-    var charts = chartDiv.selectAll("div").data(geneplots,function (d,i) {return i});
-    charts.exit().remove();
-
-    if (!charts.empty()) {
-        charts.each(fooUP);
+    chartDiv.html("");
+    for (i=0;i<geneplots.length;i++) {
+        var newChart = chartDiv.append("div");
+        lineGraph(geneplots[i],newChart,i,jsontest[0]);
     }
-
-    var newCharts = charts.enter();
-
-    if(!newCharts.empty()) {
-        var i=charts.data().length-1;
-        newCharts.append("div")
-            .call(fooNEW,i);
-    }
-
 }
 
 function lineGraph(gene,selection,chartIndex,dataset) {
@@ -156,6 +126,5 @@ function lineGraph(gene,selection,chartIndex,dataset) {
         .attr("height",15)
         .attr("xlink:href","copy.png")
         .on("click",function() {copytoclipboard(chartIndex)});
-
 }
 
