@@ -49,6 +49,36 @@ genefpkm.prototype.addfold = function(sample1,sample2,log2fold,pvalue,qvalue) {
 function loadconfig() {
 	var configjson = fs.readFileSync(bigdataPath, 'utf-8');
 	jsontest = JSON.parse(configjson);
+    for (i=0;i<jsontest.length;i++) {
+        jsontest[i] = new dataset(jsontest[i]);
+    }
+
+    //var htmldatasets = document.getElementById('divdatasets');
+    var htmldatasets = d3.select("#divdatasets").html("");
+    //htmldatasets.innerHTML = jsontest.length;
+    for(i=0;i<jsontest.length;i++) {
+        var row = htmldatasets.append("div").attr("class","panel panel-default");
+
+        var header = row.append("div")
+            .attr("class","panel-heading")
+            .attr("role","tab")
+            .attr("id","test"+i);
+
+        header.append("h4")
+            .attr("class","panel-title")
+            .append("a")
+            .attr("data-toggle","collapse")
+            .attr("data-parent","#divdatasets")
+            .attr("href","#"+jsontest[i].name)
+            .attr("aria-expanded","true")
+            .attr("aria-controls",jsontest[i].name)
+            .text(jsontest[i].name);
+
+
+
+        var content = row.append("div")
+
+    }
 }
 
 loadconfig();
@@ -197,4 +227,12 @@ function sample(samplename) {
 function replicate(replicateNum,file) {
     this.number=replicateNum;
     this.file=file;
+}
+
+function dataset(mydataset) {
+    this.name = mydataset.name;
+    this.description = mydataset.description;
+    this.files = mydataset.files;
+    this.Annotation = mydataset.Annotation;
+    this.Samples = mydataset.Samples;
 }
