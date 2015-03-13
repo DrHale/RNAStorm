@@ -63,7 +63,7 @@ function clickDisplay() {
     table.attr("class","table table-condensed");
 
     var tr = thead.append("tr");
-    tr.attr("onmousemove","tableScroll(1)");
+    //tr.attr("onmousemove","tableScroll(1)");
     tr.append("th").text("Symbol");
     tr.append("th").text("Profile");
     tr.append("th").text("\u00A0");
@@ -74,7 +74,7 @@ function clickDisplay() {
 
 
     var tr = tfoot.append("tr");
-    tr.attr("onmousemove","tableScroll(0)");
+    //tr.attr("onmousemove","tableScroll(0)");
     tr.append("th").text("\u00A0");
     tr.append("th").text("\u00A0");
     tr.append("th").text("\u00A0");
@@ -104,5 +104,17 @@ function clickDisplay() {
         barWidth: 10});
 
 
+}
+
+function tableScroller(event) {
+
+    if (event.wheelDelta>0) {
+
+        tableScroll(1);
+    }
+    if (event.wheelDelta<0) {
+
+        tableScroll(0);
+    }
 }
 

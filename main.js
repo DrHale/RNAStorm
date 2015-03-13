@@ -19,7 +19,7 @@ var filter = {
 };
 
 Object.observe(filter, function(changeRecords) {
-    console.log('observe', changeRecords);
+    //console.log('observe', changeRecords);
     clickFilter();
     clickDisplay();
 });
@@ -190,4 +190,9 @@ function pickgene(geneid,column) {
 	}
 	
 }
-	
+
+function clickData() {
+    console.log("Clicked Datasets");
+    loadconfig();
+    $('#myModal').modal('show');
+}

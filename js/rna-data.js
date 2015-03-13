@@ -57,26 +57,32 @@ function loadconfig() {
     var htmldatasets = d3.select("#divdatasets").html("");
     //htmldatasets.innerHTML = jsontest.length;
     for(i=0;i<jsontest.length;i++) {
+
         var row = htmldatasets.append("div").attr("class","panel panel-default");
 
         var header = row.append("div")
             .attr("class","panel-heading")
             .attr("role","tab")
-            .attr("id","test"+i);
+            .attr("id","heading"+i);
 
         header.append("h4")
             .attr("class","panel-title")
             .append("a")
             .attr("data-toggle","collapse")
             .attr("data-parent","#divdatasets")
-            .attr("href","#"+jsontest[i].name)
+            .attr("href","#collapse"+i)
             .attr("aria-expanded","true")
-            .attr("aria-controls",jsontest[i].name)
+            .attr("aria-controls","collapse"+i)
             .text(jsontest[i].name);
 
-
-
         var content = row.append("div")
+            .attr("id","collapse"+i)
+            .attr("class","panel-collapse collapse")
+            .attr("role","tabpanel")
+            .attr("aria-labelledby","heading"+i)
+            .append("div")
+            .attr("class","panel-body")
+            .text(jsontest[i].description);
 
     }
 }
