@@ -65,7 +65,8 @@ function loadconfig() {
             .attr("role","tab")
             .attr("id","heading"+i);
 
-        header.append("h4")
+
+        header.append("span")
             .attr("class","panel-title")
             .append("a")
             .attr("data-toggle","collapse")
@@ -74,6 +75,33 @@ function loadconfig() {
             .attr("aria-expanded","true")
             .attr("aria-controls","collapse"+i)
             .text(jsontest[i].name);
+
+        header.append("div")
+            .attr("class","pull-right")
+            .append("button")
+            .attr("type","button")
+            .attr("class","btn btn-default btn-xs")
+            //.attr("onclick","pickgene('"+d.gene+"',1)")
+            .append("span")
+            .attr("class","glyphicon glyphicon-remove");
+
+        header.append("div")
+            .attr("class","pull-right")
+            .append("button")
+            .attr("type","button")
+            .attr("class","btn btn-default btn-xs")
+            .attr("onclick","editdataset("+i+")")
+            .append("span")
+            .attr("class","glyphicon glyphicon-pencil");
+
+        header.append("div")
+            .attr("class","pull-right")
+            .append("button")
+            .attr("type","button")
+            .attr("class","btn btn-default btn-xs")
+            //.attr("onclick","pickgene('"+d.gene+"',1)")
+            .append("span")
+            .attr("class","glyphicon glyphicon-hdd");
 
         var content = row.append("div")
             .attr("id","collapse"+i)
@@ -88,6 +116,56 @@ function loadconfig() {
 }
 
 loadconfig();
+
+function saveConfig() {
+    var filedata = JSON.stringify(jsontest);
+    fs.writeFileSync(bigdataPath, filedata,'utf-8');
+}
+
+function editdataset(datasetindex) {
+    var dataset = jsontest[datasetindex];
+    console.log(dataset.name);
+    var htmleditdataset = d3.select("#diveditdataset").html("");
+
+    htmleditdataset.append("label")
+        .text("Name");
+
+    htmleditdataset.append("input")
+        .attr("class","form-control")
+        .attr("type","text")
+        .attr("value",dataset.name);
+
+    htmleditdataset.append("label")
+        .text("Description");
+    htmleditdataset.append("input")
+        .attr("class","form-control")
+        .attr("type","text")
+        .attr("value",dataset.description);
+
+    htmleditdataset.append("label")
+        .text("Annontation");
+    htmleditdataset.append("input")
+        .attr("class","form-control")
+        .attr("type","text")
+        .attr("value",dataset.Annotation);
+
+    htmleditdataset.append("label")
+        .text("Samples");
+    htmleditdataset.append("input")
+        .attr("class","form-control")
+        .attr("type","text")
+        .attr("value",dataset.Samples);
+
+    htmleditdataset.append("label")
+        .text("Files");
+    htmleditdataset.append("input")
+        .attr("class","form-control")
+        .attr("type","text")
+        .attr("value",JSON.stringify(dataset.files));
+
+    $('#myModal').modal('hide');
+    $('#editModal').modal('show');
+}
 
 function loadDataSet(dataset) {
 
@@ -169,7 +247,22 @@ function loadDataSetFolder(path) {
     console.log("loading data "+path);
     var samples = readgroupinfo(path+"read_groups.info");
     console.log(samples);
+    samples = [].map.call(samples,function(x) { return x.name; });
 
+    var newdataset = {};
+
+    newdataset.name = "New Data";
+    newdataset.description = "Description";
+    newdataset.files = "";
+    newdataset.Annotation = "Human";
+    newdataset.Samples = samples;
+
+    console.log(JSON.stringify(newdataset));
+
+    newdataset = new dataset(newdataset);
+    jsontest.push(newdataset);
+
+    saveConfig();
     //cuffdifffiles(path);
 }
 

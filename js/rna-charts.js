@@ -4,6 +4,11 @@
 
 var geneplots = [];
 
+function geneplot(fpkm,dataset) {
+    //new geneplot array structure
+}
+
+
 Array.observe(geneplots, function(changeRecords) {
     redrawCharts();
     //console.log('Array observe', changeRecords);
