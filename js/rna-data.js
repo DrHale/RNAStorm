@@ -81,7 +81,7 @@ function loadconfig() {
             .append("button")
             .attr("type","button")
             .attr("class","btn btn-default btn-xs")
-            //.attr("onclick","pickgene('"+d.gene+"',1)")
+            .attr("onclick","removeDataset("+i+")")
             .append("span")
             .attr("class","glyphicon glyphicon-remove");
 
@@ -99,6 +99,7 @@ function loadconfig() {
             .append("button")
             .attr("type","button")
             .attr("class","btn btn-default btn-xs")
+            .attr("onclick","loadDataSet(jsontest["+i+"])")
             //.attr("onclick","pickgene('"+d.gene+"',1)")
             .append("span")
             .attr("class","glyphicon glyphicon-hdd");
@@ -125,7 +126,9 @@ function saveConfig() {
 function editdataset(datasetindex) {
     var dataset = jsontest[datasetindex];
     console.log(dataset.name);
-    var htmleditdataset = d3.select("#diveditdataset").html("");
+    var htmleditdataset = d3.select("#diveditdataset").html("")
+        .append("form")
+        .attr("name","editds");
 
     htmleditdataset.append("label")
         .text("Name");
@@ -133,6 +136,7 @@ function editdataset(datasetindex) {
     htmleditdataset.append("input")
         .attr("class","form-control")
         .attr("type","text")
+        .attr("name","dsname")
         .attr("value",dataset.name);
 
     htmleditdataset.append("label")
@@ -140,6 +144,7 @@ function editdataset(datasetindex) {
     htmleditdataset.append("input")
         .attr("class","form-control")
         .attr("type","text")
+        .attr("name","dsdescription")
         .attr("value",dataset.description);
 
     htmleditdataset.append("label")
@@ -147,6 +152,7 @@ function editdataset(datasetindex) {
     htmleditdataset.append("input")
         .attr("class","form-control")
         .attr("type","text")
+        .attr("name","dsannotation")
         .attr("value",dataset.Annotation);
 
     htmleditdataset.append("label")
@@ -154,6 +160,7 @@ function editdataset(datasetindex) {
     htmleditdataset.append("input")
         .attr("class","form-control")
         .attr("type","text")
+        .attr("name","dssamples")
         .attr("value",dataset.Samples);
 
     htmleditdataset.append("label")
@@ -161,10 +168,30 @@ function editdataset(datasetindex) {
     htmleditdataset.append("input")
         .attr("class","form-control")
         .attr("type","text")
+        .attr("name","dsfiles")
         .attr("value",JSON.stringify(dataset.files));
+
+    htmleditdataset.append("input")
+        .attr("class","form-control")
+        .attr("type","hidden")
+        .attr("name","dsindex")
+        .attr("value",datasetindex);
 
     $('#myModal').modal('hide');
     $('#editModal').modal('show');
+}
+
+function saveDataset() {
+    var dsform = document.editds;
+    var index = +dsform.dsindex.value;
+
+    //console.log(index);
+    jsontest[index].name = dsform.dsname.value;
+    jsontest[index].description = dsform.dsdescription.value;
+
+    saveConfig();
+    loadconfig();
+    $('#myModal').modal('show');
 }
 
 function loadDataSet(dataset) {
@@ -236,11 +263,18 @@ function getGeneFpkm(row,numSamples) {
 
 loadDataSet(jsontest[0]);
 
+function removeDataset(dataindex) {
+    jsontest.splice(dataindex,1);
+    saveConfig();
+    loadconfig();
+}
+
 function clickLoad() {
     var file = document.getElementById("file1").value;
     console.log("clicked load");
     file = file.substring(0,file.lastIndexOf("\\")+1);
     loadDataSetFolder(file);
+    loadconfig();
 }
 
 function loadDataSetFolder(path) {
@@ -253,7 +287,13 @@ function loadDataSetFolder(path) {
 
     newdataset.name = "New Data";
     newdataset.description = "Description";
-    newdataset.files = "";
+
+    newdataset.files = {};
+    newdataset.files.fpkm = path+"genes.fpkm_tracking";
+    newdataset.files.ann = "C:/John/NodeDev/CD34-Pro-Data/genenames2.txt";
+    newdataset.files.iso = path+"isoforms.fpkm_tracking";
+    newdataset.files.diff = path+"gene_exp.diff";
+
     newdataset.Annotation = "Human";
     newdataset.Samples = samples;
 

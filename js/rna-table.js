@@ -86,7 +86,8 @@ function clickDisplay() {
         var tr = tbody.append("tr");
         tr.append("td").text(d.gene);
 
-        var sptext=d.fpkm[0]+','+d.fpkm[1]+','+d.fpkm[2]+','+d.fpkm[3];
+        var sptext = d.fpkm.toString();
+        //var sptext=d.fpkm[0]+','+d.fpkm[1]+','+d.fpkm[2]+','+d.fpkm[3];
         tr.append("td").append("span").attr("class","inlinesparkline").text(sptext);
         tr.append("td").append("button").attr("type","button").attr("class","btn btn-default btn-xs").attr("onclick","pickgene('"+d.gene+"',1)").append("span").attr("class","glyphicon glyphicon-stats");
 
