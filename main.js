@@ -6,6 +6,7 @@ var filtered = [];
 var displayNrows = 15;
 //var win = gui.Window.get();
 var newdata = [];
+
 var genenames = [];
 var genediff = [];
 
@@ -139,6 +140,7 @@ function txtFilter(element) {
 }
 
 function clickFilter() {
+    //delete filtered;
 	filtered = newdata.filter(txtFilter);
 	//console.log(filtered.length);
 	//updateNumFilterResults(filtered.length);
@@ -186,7 +188,7 @@ function pickgene(geneid,column) {
             window.open(genelink)
         )
 	} else {
-		addChart(geneid);
+		addChart(geneid,loadedDataset);
 	}
 	
 }

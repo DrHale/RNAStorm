@@ -4,8 +4,11 @@
 
 var geneplots = [];
 
-function geneplot(fpkm,dataset) {
+function geneplot(gene,dataset) {
     //new geneplot array structure
+    this.gene = gene;
+    this.dataset = dataset;
+    this.style = "line";
 }
 
 
@@ -14,9 +17,10 @@ Array.observe(geneplots, function(changeRecords) {
     //console.log('Array observe', changeRecords);
 });
 
-function addChart(gene) {
+function addChart(gene,dataset) {
     var chartGene = newdata[getGene(gene)];
-    geneplots.push(chartGene);
+    var mygeneplot = new geneplot(chartGene,dataset);
+    geneplots.push(mygeneplot);
 }
 
 function removeChart(intChart) {
@@ -32,7 +36,7 @@ function redrawCharts() {
     chartDiv.html("");
     for (i=0;i<geneplots.length;i++) {
         var newChart = chartDiv.append("div");
-        lineGraph(geneplots[i],newChart,i,jsontest[0]);
+        lineGraph(geneplots[i].gene,newChart,i,geneplots[i].dataset);
     }
 }
 

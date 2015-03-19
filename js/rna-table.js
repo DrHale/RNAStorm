@@ -23,7 +23,7 @@ function tableScroll(dir) {
 function clickDisplay() {
     var genePos = document.getElementById('minGene');
     var currentPos = parseInt(genePos.value);
-
+    var displayset = []
     if (currentPos<0) {
         currentPos=0;
     }
@@ -38,7 +38,7 @@ function clickDisplay() {
                 currentPos=(filtered.length-displayNrows);
             }
         }
-        var displayset = filtered.slice(currentPos, currentPos+displayNrows);
+        displayset = filtered.slice(currentPos, currentPos+displayNrows)
     } else {
 
         if ((currentPos+displayNrows) > newdata.length) {
@@ -48,14 +48,19 @@ function clickDisplay() {
                 currentPos=(newdata.length-displayNrows);
             }
         }
-        var displayset = newdata.slice(currentPos, currentPos+displayNrows);
+        displayset = newdata.slice(currentPos, currentPos+displayNrows);
     }
 
     genePos.value = currentPos;
 
 //var genes = [].map.call(displayset,function(x) { return x.gene; })
 
-    var table = d3.select("#example1").html("").append("table");
+    //$("#example1").unbind();
+    var table = d3.select("#example1");
+        table.selectAll("button").on("click",null);
+       // table.selectAll("*").unbind("click");
+        table.selectAll("*").remove();
+        table.append("table");
     var thead = table.append("thead");
     var tfoot = table.append("tfoot");
     var tbody = table.append("tbody");
@@ -82,28 +87,62 @@ function clickDisplay() {
 
 
     for(i=0;i<displayset.length;i++) {
+        //console.log(displayset.length);
         var d = displayset[i];
         var tr = tbody.append("tr");
         tr.append("td").text(d.gene);
 
-        var sptext = d.fpkm.toString();
-        //var sptext=d.fpkm[0]+','+d.fpkm[1]+','+d.fpkm[2]+','+d.fpkm[3];
-        tr.append("td").append("span").attr("class","inlinesparkline").text(sptext);
-        tr.append("td").append("button").attr("type","button").attr("class","btn btn-default btn-xs").attr("onclick","pickgene('"+d.gene+"',1)").append("span").attr("class","glyphicon glyphicon-stats");
+        if(loadedDataset.Conditions.length>0) {
+            //console.log("here");
+            for (j=0;j<loadedDataset.Conditions.length;j++) {
+                var plotfpkm = getConFpkm(d.fpkm,loadedDataset.Conditions[j].index);
+                var sptext = plotfpkm.toString();
+                tr.append("td").append("span").attr("class", "inlinesparkline").text(sptext);
+            }
+        } else {
+            var sptext = d.fpkm.toString();
+            tr.append("td").append("span").attr("class", "inlinesparkline").text(sptext);
+        }
 
-        tr.append("td").append("button").attr("type","button").attr("class","btn btn-default btn-xs").attr("onclick","pickgene('"+d.gene+"',0)").append("span").attr("class","glyphicon glyphicon-globe");
+        var butgraph =  tr.append("td")
+            .append("button")
+            .attr("type","button");
+        butgraph.on('click',function(){pickgene(d.gene,1)});
+        butgraph.attr("class","btn btn-default btn-xs")
+            .append("span")
+            .attr("class","glyphicon glyphicon-stats");
+
+        var butlink =  tr.append("td")
+            .append("button")
+            .attr("type","button");
+        butlink.on('click',function(){pickgene(d.gene,0)});
+        butlink.attr("class","btn btn-default btn-xs")
+            .append("span")
+            .attr("class","glyphicon glyphicon-globe");
+
+        //tr.append("td").append("button").attr("type","button").attr("class","btn btn-default btn-xs").attr("onclick","pickgene('"+d.gene+"',1)").append("span").attr("class","glyphicon glyphicon-stats");
+
+        //tr.append("td").append("button").attr("type","button").attr("class","btn btn-default btn-xs").attr("onclick","pickgene('"+d.gene+"',0)").append("span").attr("class","glyphicon glyphicon-globe");
         tr.append("td").text(d.genename);
         tr.append("td").text(d.locus)
 
     }
 
+    delete displayset;
+    delete table;
+    /*
     $(".inlinesparkline").sparkline('html', {
         type: 'bar',
         height: '20',
-        barWidth: 10});
-
+        barWidth: 10,
+        disableInteraction:true,
+        zeroAxis: false
+    });
+*/
 
 }
+
+document.getElementById("example1").addEventListener("mousewheel", tableScroller, false);
 
 function tableScroller(event) {
 
@@ -115,5 +154,14 @@ function tableScroller(event) {
 
         tableScroll(0);
     }
+    event.stopPropagation();
 }
 
+function getConFpkm(fpkm,indexes) {
+    //console.log("here 2");
+    var retfpkm = [];
+    for (k=0; k<indexes.length; k++) {
+        retfpkm.push(fpkm[indexes[k]]);
+    }
+    return retfpkm;
+}

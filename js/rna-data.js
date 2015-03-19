@@ -2,6 +2,7 @@
 var fs = require('fs');
 var bigdataPath = "C:/John/NodeDev/CD34-Pro-Data/jhdata.json";
 var jsontest;
+var loadedDataset = {};
 
 function genefpkm(gene,locus,fpkm,name) {
     this.gene=gene;
@@ -100,7 +101,6 @@ function loadconfig() {
             .attr("type","button")
             .attr("class","btn btn-default btn-xs")
             .attr("onclick","loadDataSet(jsontest["+i+"])")
-            //.attr("onclick","pickgene('"+d.gene+"',1)")
             .append("span")
             .attr("class","glyphicon glyphicon-hdd");
 
@@ -164,6 +164,14 @@ function editdataset(datasetindex) {
         .attr("value",dataset.Samples);
 
     htmleditdataset.append("label")
+        .text("Conditions");
+    htmleditdataset.append("input")
+        .attr("class","form-control")
+        .attr("type","text")
+        .attr("name","dsconditions")
+        .attr("value",JSON.stringify(dataset.Conditions));
+
+    htmleditdataset.append("label")
         .text("Files");
     htmleditdataset.append("input")
         .attr("class","form-control")
@@ -188,6 +196,12 @@ function saveDataset() {
     //console.log(index);
     jsontest[index].name = dsform.dsname.value;
     jsontest[index].description = dsform.dsdescription.value;
+    console.log(dsform.dsconditions.value);
+    if (dsform.dsconditions.value=="") {
+        jsontest[index].Conditions = [];
+    } else {
+        jsontest[index].Conditions = JSON.parse(dsform.dsconditions.value);
+    }
 
     saveConfig();
     loadconfig();
@@ -195,7 +209,7 @@ function saveDataset() {
 }
 
 function loadDataSet(dataset) {
-
+    loadedDataset = dataset;
 fs.readFile(dataset.files.ann, 'utf-8',function(error, contents) {
 	var data =[];
 	data = d3.tsv.parseRows(contents);
@@ -374,4 +388,5 @@ function dataset(mydataset) {
     this.files = mydataset.files;
     this.Annotation = mydataset.Annotation;
     this.Samples = mydataset.Samples;
+    this.Conditions = mydataset.Conditions;
 }
