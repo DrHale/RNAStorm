@@ -41,11 +41,15 @@ function redrawCharts() {
 }
 
 function lineGraph(gene,selection,chartIndex,dataset) {
-    var chartStages = dataset.Samples;
-   // var chartStages = ["CD34","BFU","CFU","Pro"];
+    if (dataset.Conditions.length > 1) {
+        var chartStages = dataset.Samples;
+    } else {
+        var chartStages = dataset.Samples;
+    }
+    // var chartStages = ["CD34","BFU","CFU","Pro"];
     var chartGene = gene;
 
-    var chartwidth = 350,chartheight = 280;
+    var chartwidth = 350, chartheight = 280;
 
     var margin = {top: 40, right: 20, bottom: 30, left: 50},
         width = chartwidth - margin.left - margin.right,
@@ -66,12 +70,12 @@ function lineGraph(gene,selection,chartIndex,dataset) {
         .ticks(10);
 
     var svg = selection
-        .attr("class","geneGraph")
-        .attr("draggable","true")
+        .attr("class", "geneGraph")
+        .attr("draggable", "true")
         .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-        .attr("text-rendering","geometricPrecision");
+        .attr("text-rendering", "geometricPrecision");
 
     var group = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -79,16 +83,24 @@ function lineGraph(gene,selection,chartIndex,dataset) {
     y.domain([0, d3.max(chartGene.fpkm)]);
 
     var line = d3.svg.line()
-        .x(function(d,i) { return x(chartStages[i]); })
-        .y(function(d) { return y(d); });
+        .x(function (d, i) {
+            return x(chartStages[i]);
+        })
+        .y(function (d) {
+            return y(d);
+        });
 
-    group.append("path")
-        .datum(chartGene.fpkm)
-        .attr('fill', 'none')
-        .attr('stroke','green')
-        .attr('stroke-width',3)
-        .attr("class", "line")
-        .attr("d", line);
+    if (dataset.Conditions.length > 1) {
+
+    } else {
+        group.append("path")
+            .datum(chartGene.fpkm)
+            .attr('fill', 'none')
+            .attr('stroke', 'green')
+            .attr('stroke-width', 3)
+            .attr("class", "line")
+            .attr("d", line);
+    }
 
     group.append("g")
         .attr("class", "axis")

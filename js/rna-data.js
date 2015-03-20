@@ -116,8 +116,6 @@ function loadconfig() {
     }
 }
 
-loadconfig();
-
 function saveConfig() {
     var filedata = JSON.stringify(jsontest);
     fs.writeFileSync(bigdataPath, filedata,'utf-8');
@@ -274,8 +272,6 @@ function getGeneFpkm(row,numSamples) {
     }
     return fpkm;
 }
-
-loadDataSet(jsontest[0]);
 
 function removeDataset(dataindex) {
     jsontest.splice(dataindex,1);
