@@ -202,6 +202,6 @@ function clickData() {
 
 window.onload = function() {
     loadconfig();
-    loadDataSet(jsontest[0]);
+    //loadDataSet(jsontest[0]);
     document.getElementById("example1").addEventListener("mousewheel", tableScroller, false);
 };
