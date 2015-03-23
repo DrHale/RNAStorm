@@ -61,13 +61,6 @@ function clickDisplay() {
 
 }
 
-window.onload = function() {
-    loadconfig();
-    loadDataSet(jsontest[0]);
-    document.getElementById("example1").addEventListener("mousewheel", tableScroller, false);
-};
-
-
 function clickPlotGene(e) {
     //console.log(e.currentTarget.dataset.gene);
     //addChart(e.currentTarget.dataset.gene,loadedDataset);
@@ -108,7 +101,7 @@ function addTable(datacontent) {
 
     var table = tablediv.append("table");
     var thead = table.append("thead");
-    var tfoot = table.append("tfoot");
+    //var tfoot = table.append("tfoot");
     var tbody = table.append("tbody");
 
     table.attr("class","table table-condensed");
@@ -120,7 +113,7 @@ function addTable(datacontent) {
     tr.append("th").text("\u00A0");
     tr.append("th").text("Gene Name");
     tr.append("th").text("Locus");
-
+/*
     var tr = tfoot.append("tr");
     tr.append("th").text("\u00A0");
     tr.append("th").text("\u00A0");
@@ -128,22 +121,20 @@ function addTable(datacontent) {
     tr.append("th").text("\u00A0");
     tr.append("th").text("\u00A0");
     tr.append("th").text("\u00A0");
-
+*/
     for(i=0;i<datacontent.length;i++) {
         //console.log(datacontent.length);
         var d = datacontent[i];
         var tr = tbody.append("tr").datum(d.gene);
         tr.append("td").text(d.gene);
 
-        if(loadedDataset.Conditions.length>0) {
+        if(loadedDataset.Conditions.length>1) {
             //console.log("here");
-            for (j=0;j<loadedDataset.Conditions.length;j++) {
-                var plotfpkm = getConFpkm(d.fpkm,loadedDataset.Conditions[j].index);
+            for (j=0;j<loadedDataset.Conditions[1].length;j++) {
 
-                //var s = j*Conditions[0].length;
-                //var e = ((j+1)*Conditions[0].length)-1;
-                //var plotfpkm = d.fpkm.slice(s,e);
-                //for (j=0;j<Conditions[1].length;j++)
+                var s = j*(loadedDataset.Conditions[0].length);
+                var e = ((j+1)*loadedDataset.Conditions[0].length);
+                var plotfpkm = d.fpkm.slice(s,e);
 
                 var sptext = plotfpkm.toString();
                 tr.append("td").append("span").attr("class", "inlinesparkline"+j).text(sptext);
@@ -181,7 +172,7 @@ function addTable(datacontent) {
 
     if(loadedDataset.Conditions.length>0) {
         //console.log("here");
-        for (j=0;j<loadedDataset.Conditions.length;j++) {
+        for (j=0;j<loadedDataset.Conditions[1].length;j++) {
             $(".inlinesparkline"+j).sparkline('html', {
                 type: 'bar',
                 height: '20',

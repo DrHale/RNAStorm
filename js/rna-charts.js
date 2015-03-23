@@ -41,8 +41,9 @@ function redrawCharts() {
 }
 
 function lineGraph(gene,selection,chartIndex,dataset) {
+    var colorPal = ['green','red'];
     if (dataset.Conditions.length > 1) {
-        var chartStages = dataset.Samples;
+        var chartStages = dataset.Conditions[0];
     } else {
         var chartStages = dataset.Samples;
     }
@@ -90,8 +91,21 @@ function lineGraph(gene,selection,chartIndex,dataset) {
             return y(d);
         });
 
-    if (dataset.Conditions.length > 1) {
 
+    if (dataset.Conditions.length > 1) {
+        for (j=0;j<dataset.Conditions[1].length;j++) {
+            var s = j*(dataset.Conditions[0].length);
+            var e = ((j+1)*dataset.Conditions[0].length);
+            var plotfpkm = chartGene.fpkm.slice(s,e);
+
+            group.append("path")
+                .datum(plotfpkm)
+                .attr('fill', 'none')
+                .attr('stroke', colorPal[j%2])
+                .attr('stroke-width', 3)
+                .attr("class", "line")
+                .attr("d", line);
+        }
     } else {
         group.append("path")
             .datum(chartGene.fpkm)
@@ -128,7 +142,7 @@ function lineGraph(gene,selection,chartIndex,dataset) {
         .attr("y", 20)
         .attr("x", chartwidth/2)
         .style("text-anchor", "middle")
-        .text(chartGene.gene);
+        .text(chartGene.gene+" - "+dataset.name);
 
     //close button
     svg.append("image")

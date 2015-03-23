@@ -51,6 +51,7 @@
 </div><!-- /.modal -->
 
     <!-- Fixed navbar -->
+<!--
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -64,18 +65,30 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#" onClick="clickData()">Home</a></li>
+            <li><a href="#">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
     </nav>
-
+-->
     <!-- Begin page content -->
 	<div class="panel panel-default">
-	<div class="panel-heading">Graphs <button id="butDisplay" onClick="clickClear();">Clear</button></div>
-	<div class="panel-body" id="genecharts" style="height: 300px;overflow:auto;"></div>
+	<div class="panel-heading">
+        <button class="btn btn-default btn-xs" id="butDisplay" onClick="clickClear();">Clear</button>
+        <div class="pull-right">
+            <button type="button" class="btn btn-default btn-xs" onclick="win.showDevTools();">
+                <span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="pull-right">
+            <button type="button" class="btn btn-default btn-xs" onClick="clickData()">Load Dataset
+                <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+	<div class="panel-body" id="genecharts"></div>
 	</div>
 	
 	<div>

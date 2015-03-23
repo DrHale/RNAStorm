@@ -4,7 +4,7 @@ var gui = require('nw.gui');
 var geneindex = [];
 var filtered = [];
 var displayNrows = 15;
-//var win = gui.Window.get();
+var win = gui.Window.get();
 var newdata = [];
 
 var genenames = [];
@@ -198,3 +198,10 @@ function clickData() {
     loadconfig();
     $('#myModal').modal('show');
 }
+
+
+window.onload = function() {
+    loadconfig();
+    loadDataSet(jsontest[0]);
+    document.getElementById("example1").addEventListener("mousewheel", tableScroller, false);
+};

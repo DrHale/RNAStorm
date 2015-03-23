@@ -1,6 +1,6 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-  padding-top: 50px;
+  padding-top: 0px;
 }
 
 .geneGraph{
@@ -8,4 +8,11 @@ body {
   border: 2px solid #fff;
   box-shadow: inset 0 0 3px #666;
   /*cursor: move;*/
+}
+
+#genecharts {
+    padding: 20px;
+    height: 300px;
+    resize: vertical;
+    overflow: auto;
 }

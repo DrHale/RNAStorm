@@ -1,1 +1,11 @@
-{  "name": "hello",  "main": "index.html",  "window": {    "toolbar": true,    "width": 800,    "height": 600  }, "js-flags": "--expose_gc"}
+{
+  "name": "hello",
+  "main": "index.html",
+  "window": {
+    "toolbar": false,
+    "width": 800,
+    "height": 600,
+    "title": "RNAStorm v0.3 alpha"
+  },
+  "js-flags": "--expose_gc"
+}
