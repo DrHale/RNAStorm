@@ -58,8 +58,10 @@ function lineGraph(gene,selection,chartIndex,dataset) {
 
     var x = d3.scale.ordinal().domain(chartStages).rangePoints([0, width], 0.5);
 
-    var y = d3.scale.linear()
+    var y = d3.scale.log()
         .range([height, 0]);
+    //var y = d3.scale.linear()
+    //    .range([height, 0]);
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -68,8 +70,8 @@ function lineGraph(gene,selection,chartIndex,dataset) {
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
-        .ticks(10);
-
+        .ticks(5);
+        //.ticks(10);
     var svg = selection
         .attr("class", "geneGraph")
         .attr("draggable", "true")
@@ -81,7 +83,22 @@ function lineGraph(gene,selection,chartIndex,dataset) {
     var group = svg.append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    y.domain([0, d3.max(chartGene.fpkm)]);
+    //y.domain([0, d3.max(chartGene.fpkm)]);
+
+    var min = 1;
+    var max = 1;
+    for (k=0;k<chartGene.fpkm.length;k++) {
+        if (chartGene.fpkm[k]<min && chartGene.fpkm[k]>0) {
+            min = chartGene.fpkm[k];
+        }
+        if (chartGene.fpkm[k]>max) {
+            max = chartGene.fpkm[k];
+        }
+    }
+
+    console.log("min max "+min+" "+max);
+
+    y.domain([min, max]);
 
     var line = d3.svg.line()
         .x(function (d, i) {
