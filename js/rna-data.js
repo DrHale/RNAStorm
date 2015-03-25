@@ -233,7 +233,7 @@ function loadDataSet(dataset) {
 
     pbar.setAttribute("style","width: 60%");
 
-    /* Load diff */
+    /* Load diff file*/
 
     contents = fs.readFileSync(dataset.files.diff, 'utf-8');
     data = d3.tsv.parseRows(contents);
