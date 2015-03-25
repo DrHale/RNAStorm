@@ -208,6 +208,8 @@ function saveDataset() {
 
 function loadDataSet(dataset) {
     loadedDataset = dataset;
+    var pbar = document.getElementById("dataprogress")
+    pbar.setAttribute("style","width: 10%");
 fs.readFile(dataset.files.ann, 'utf-8',function(error, contents) {
 	var data =[];
 	data = d3.tsv.parseRows(contents);
@@ -217,6 +219,7 @@ fs.readFile(dataset.files.ann, 'utf-8',function(error, contents) {
 	genenames = data;
 	data="";
 });
+    pbar.setAttribute("style","width: 30%");
 
 fs.readFile(dataset.files.fpkm, 'utf-8', function (error, contents) {
 	var data = [];
@@ -233,6 +236,7 @@ fs.readFile(dataset.files.fpkm, 'utf-8', function (error, contents) {
 	geneindex = [].map.call(newdata,function(x) { return x.gene; })
 });
 //}
+    pbar.setAttribute("style","width: 60%");
 
 fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 	var data = [];
@@ -261,6 +265,7 @@ fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 	console.log("DONE!!");
 	d3.select("#appStatus").text("Ready ...");
 });
+    pbar.setAttribute("style","width: 100%");
 
 }
 
