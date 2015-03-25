@@ -125,10 +125,13 @@ function addTable(datacontent) {
     for(i=0;i<datacontent.length;i++) {
         //console.log(datacontent.length);
         var d = datacontent[i];
+        var min = d3.min(d.fpkm);
+        var max = d3.max(d.fpkm);
         var tr = tbody.append("tr").datum(d.gene);
         tr.append("td").text(d.gene);
 
         if(loadedDataset.Conditions.length>1) {
+
             //console.log("here");
             for (j=0;j<loadedDataset.Conditions[1].length;j++) {
 
@@ -137,11 +140,21 @@ function addTable(datacontent) {
                 var plotfpkm = d.fpkm.slice(s,e);
 
                 var sptext = plotfpkm.toString();
-                tr.append("td").append("span").attr("class", "inlinesparkline"+j).text(sptext);
+                tr.append("td")
+                    .append("span")
+                    .attr("class", "inlinesparkline"+j)
+                    .attr("sparkchartRangeMin",min)
+                    .attr("sparkchartRangeMax",max)
+                    .text(sptext);
             }
         } else {
             var sptext = d.fpkm.toString();
-            tr.append("td").append("span").attr("class", "inlinesparkline").text(sptext);
+            tr.append("td")
+                .append("span")
+                .attr("class", "inlinesparkline")
+                .attr("sparkchartRangeMin",min)
+                .attr("sparkchartRangeMax",max)
+                .text(sptext);
         }
 
         tr.append("td")
@@ -179,7 +192,9 @@ function addTable(datacontent) {
                 barWidth: 10,
                 disableInteraction:true,
                 zeroAxis: false,
-                barColor: colorPal[j%2]
+                barColor: colorPal[j%2],
+                chartRangeClip: true,
+                enableTagOptions: true
             });
         }
     } else {
@@ -188,7 +203,9 @@ function addTable(datacontent) {
             height: '20',
             barWidth: 10,
             disableInteraction:true,
-            zeroAxis: false
+            zeroAxis: false,
+            chartRangeClip: true,
+            enableTagOptions: true
         });
     }
 }

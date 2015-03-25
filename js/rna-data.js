@@ -206,9 +206,65 @@ function saveDataset() {
     $('#myModal').modal('show');
 }
 
+
+
 function loadDataSet(dataset) {
     loadedDataset = dataset;
-    var pbar = document.getElementById("dataprogress")
+    var pbar = document.getElementById("dataprogress");
+    pbar.setAttribute("style","width: 10%");
+
+    /* Load Annotation */
+    var contents = fs.readFileSync(dataset.files.ann, 'utf-8');
+    var data = d3.tsv.parseRows(contents);
+
+    genecols = data.shift();
+    data.forEach(function(element, index, array) {element.splice(0,1)});
+    genenames = data;
+
+    pbar.setAttribute("style","width: 30%");
+
+    /* Load fpkm */
+
+    contents = fs.readFileSync(dataset.files.fpkm, 'utf-8');
+    data = d3.tsv.parseRows(contents);
+    data.shift();
+    newdata = data.map(function(x,i) { return new genefpkm(x[0],x[6],getGeneFpkm(x,dataset.Samples.length),genenames[i][2])});
+    geneindex = [].map.call(newdata,function(x) { return x.gene; });
+
+    pbar.setAttribute("style","width: 60%");
+
+    /* Load diff */
+
+    contents = fs.readFileSync(dataset.files.diff, 'utf-8');
+    data = d3.tsv.parseRows(contents);
+
+    genecols = data.shift();
+    console.log("data length"+data.length);
+
+    var i=0;
+    console.log(i);
+    console.log(data.length+" "+newdata.length);
+
+    for (i=0;i<data.length;i++) {
+        if (newdata[i%newdata.length].gene==data[i][1]) {
+            if (data[i][13] == "yes") {
+                newdata[i%newdata.length].addfold(data[i][4], data[i][5], data[i][9], data[i][11], data[i][12]);
+            }
+        }
+    }
+
+    delete contents;
+    delete data;
+
+    console.log("DONE!!");
+    d3.select("#appStatus").text("Ready ...");
+    pbar.setAttribute("style","width: 100%");
+
+}
+
+function loadDataSet2(dataset) {
+    loadedDataset = dataset;
+    var pbar = document.getElementById("dataprogress");
     pbar.setAttribute("style","width: 10%");
 fs.readFile(dataset.files.ann, 'utf-8',function(error, contents) {
 	var data =[];
@@ -243,13 +299,15 @@ fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 	data = d3.tsv.parseRows(contents);
 	
 	genecols = data.shift();
-    //console.log("data length"+data.length);
+    console.log("data length"+data.length);
 	var j=0;
 	var i=0;
+    console.log(i+" "+j);
+    console.log(data.length+" "+newdata.length);
 	while(i<data.length && j<newdata.length) {
+
 		if (newdata[j].gene==data[i][1]) {
 			newdata[j].addfold(data[i][2],data[i][3],data[i][7],data[i][9],data[i][10]);
-			//console.log(i+" "+j);
 			i++;
 		} else {
 		if (newdata[j].gene<data[i][1]) {
@@ -262,9 +320,9 @@ fs.readFile(dataset.files.diff, 'utf-8',function(error, contents) {
 	}
 	//changeCluster(2.0);
 	data=[];
-	console.log("DONE!!");
-	d3.select("#appStatus").text("Ready ...");
 });
+    console.log("DONE!!");
+    d3.select("#appStatus").text("Ready ...");
     pbar.setAttribute("style","width: 100%");
 
 }

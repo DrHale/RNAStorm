@@ -58,10 +58,10 @@ function lineGraph(gene,selection,chartIndex,dataset) {
 
     var x = d3.scale.ordinal().domain(chartStages).rangePoints([0, width], 0.5);
 
-    var y = d3.scale.log()
+   // var y = d3.scale.log()
+     //   .range([height, 0]);
+    var y = d3.scale.linear()
         .range([height, 0]);
-    //var y = d3.scale.linear()
-    //    .range([height, 0]);
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -96,9 +96,9 @@ function lineGraph(gene,selection,chartIndex,dataset) {
         }
     }
 
-    console.log("min max "+min+" "+max);
+    //console.log("min max "+min+" "+max);
 
-    y.domain([min, max]);
+    y.domain([0, max]);
 
     var line = d3.svg.line()
         .x(function (d, i) {
